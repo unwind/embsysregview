@@ -16,7 +16,9 @@ import net.miginfocom.swt.MigLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.*;
@@ -61,7 +63,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	protected TreeViewer viewer;
 	private TreeParent invisibleRoot;
 	private Label infoLabel;
-	private Button configButton;
+	private Button configButton, collapseButton;
 	private Composite header;
 	private Action doubleClickAction;
 	private Image selectedImage, unselectedImage, selectedFieldImage, unselectedFieldImage, infoImage, interpretationImage, configButtonImage;
@@ -246,7 +248,19 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {}
 		});
-	    
+
+		collapseButton = new Button(header, SWT.FLAT);
+		collapseButton.setLayoutData(new RowData(17, 17));
+		collapseButton.setText("-");	// Fixme: add an icon, if I can figure out one at 17x17.
+		collapseButton.setToolTipText("Collapse all open tree nodes");
+		collapseButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				if(e.type == SWT.Selection) {
+					viewer.collapseAll();
+				}
+			}
+		});
+
 	    infoLabel = new Label(header,SWT.NONE);
 	    	    
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
