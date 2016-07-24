@@ -291,9 +291,9 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			public String getText(Object element) {
 				if (element instanceof TreeField)
 				{
-					int bitOffset = ((TreeField) element).getBitOffset();
-					int bitLength = ((TreeField) element).getBitLength();
-					
+					final int bitOffset = ((TreeField) element).getBitOffset();
+					final int bitLength = ((TreeField) element).getBitLength();
+
 					if (bitLength == 1)
 						return element.toString()
 								+ " (bit "
