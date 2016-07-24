@@ -251,7 +251,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 
 		collapseButton = new Button(header, SWT.FLAT);
 		collapseButton.setLayoutData(new RowData(17, 17));
-		collapseButton.setText("-");	// Fixme: add an icon, if I can figure out one at 17x17.
+		collapseButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_COLLAPSEALL));
 		collapseButton.setToolTipText("Collapse all open tree nodes");
 		collapseButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -261,8 +261,8 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			}
 		});
 
-	    infoLabel = new Label(header,SWT.NONE);
-	    	    
+		infoLabel = new Label(header,SWT.NONE);
+
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.getControl().setLayoutData("height 100%,width 100%,hmin 0,wmin 0");
 		viewer.getTree().setLinesVisible(true);
