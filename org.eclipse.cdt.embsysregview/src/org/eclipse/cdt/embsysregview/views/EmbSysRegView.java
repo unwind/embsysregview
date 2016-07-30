@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.cdt.embsysregview.views;
 
+import java.awt.Toolkit;
 import java.net.URL;
 import java.text.ParseException;
 import net.miginfocom.swt.MigLayout;
@@ -23,8 +24,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -35,6 +34,9 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,7 +65,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	protected TreeViewer viewer;
 	private TreeParent invisibleRoot;
 	private Label infoLabel;
-	private Button configButton, collapseButton;
+	private Button configButton, collapseButton, copyButton;
 	private Composite header;
 	private Action doubleClickAction;
 	private Image selectedImage, unselectedImage, selectedFieldImage, unselectedFieldImage, infoImage, interpretationImage, configButtonImage;
@@ -257,6 +259,24 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			public void handleEvent(Event e) {
 				if(e.type == SWT.Selection) {
 					viewer.collapseAll();
+				}
+			}
+		});
+
+		copyButton = new Button(header, SWT.FLAT);
+		copyButton.setLayoutData(new RowData(17, 17));
+		copyButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_COPY));
+		copyButton.setToolTipText("Copy active (green) register values to clipboard");
+		copyButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				if(e.type == SWT.Selection) {
+					final StringBuilder sb = new StringBuilder();
+					copyRegisters(sb);
+					if (sb.length() > 0) {
+						final Clipboard cb = new Clipboard(Display.getCurrent());
+						final TextTransfer tt = TextTransfer.getInstance();
+						cb.setContents(new Object[] { sb.toString() }, new Transfer[] { tt });
+					}
 				}
 			}
 		});
@@ -878,6 +898,30 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			for (TreeElement telement : pelement.getChildren())
 				updateTreeFields(telement);
 		}
+	}
+
+	public void copyRegisters(StringBuilder sb) {
+		class RegisterCopyAdder {
+			StringBuilder stringBuilder;
+			public RegisterCopyAdder(StringBuilder sb) {
+				stringBuilder = sb;
+			}
+			public void add(TreeElement element) {
+				if (element instanceof TreeRegister) {
+					final TreeRegister reg = (TreeRegister) element;
+					if (reg.isRetrievalActive()) {
+						stringBuilder.append(reg.getName() + "=" + reg.getValue() + "\n");
+					}
+				}
+				else if (element instanceof TreeParent) {
+					final TreeParent p = (TreeParent) element;
+					for (final TreeElement ce : p.getChildren())
+						add(ce);
+				}
+			}
+		};
+		final RegisterCopyAdder adder = new RegisterCopyAdder(sb);
+		adder.add(invisibleRoot);
 	}
 
 	/**
