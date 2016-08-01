@@ -222,33 +222,27 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		configButton.setImage(configButtonImage);
 		configButton.setSize(17, 17);
 		RowData data = new RowData();
-	    data.width = 17;
-	    data.height = 17;
-	    configButton.setLayoutData(data);
-	    configButton.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseUp(MouseEvent e) {}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				IPreferencePage page = new PreferencePageEmbSys();
-				page.setTitle("EmbSysRegView");
-				IPreferencePage page2 = new PreferencePageEmbSysBehavior();
-				page2.setTitle("Behavior");
-				PreferenceManager mgr = new PreferenceManager();
-				IPreferenceNode node = new PreferenceNode("1", page);
-				node.add(new PreferenceNode("2",page2));
-				mgr.addToRoot(node);
-				PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench().
-		                getActiveWorkbenchWindow().getShell(), mgr);
-				dialog.create();
-				dialog.setMessage(page.getTitle());
-				dialog.open();
+		data.width = 17;
+		data.height = 17;
+		configButton.setLayoutData(data);
+		configButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				if(e.type == SWT.Selection) {
+					IPreferencePage page = new PreferencePageEmbSys();
+					page.setTitle("EmbSysRegView");
+					IPreferencePage page2 = new PreferencePageEmbSysBehavior();
+					page2.setTitle("Behavior");
+					PreferenceManager mgr = new PreferenceManager();
+					IPreferenceNode node = new PreferenceNode("1", page);
+					node.add(new PreferenceNode("2",page2));
+					mgr.addToRoot(node);
+					PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench().
+							getActiveWorkbenchWindow().getShell(), mgr);
+					dialog.create();
+					dialog.setMessage(page.getTitle());
+					dialog.open();
+				}
 			}
-
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {}
 		});
 
 		collapseButton = new Button(header, SWT.FLAT);
