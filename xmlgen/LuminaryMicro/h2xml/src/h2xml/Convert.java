@@ -71,7 +71,6 @@ public class Convert {
 		String chipname = filename.substring(0, filename.length() - 2)
 				.toUpperCase();
 
-
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(true);
 

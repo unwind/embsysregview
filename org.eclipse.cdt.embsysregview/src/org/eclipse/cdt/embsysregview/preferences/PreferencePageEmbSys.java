@@ -87,44 +87,44 @@ public class PreferencePageEmbSys extends PreferencePage implements
 			if(chip.getSelectionIndex()==-1)
 				return false;  
 			IPreferenceStore store = getPreferenceStore();
-			
+
 			if(architecture.getSelectionIndex()!=-1)
 				store.setValue("architecture", architecture.getItem(architecture.getSelectionIndex()));
 			else
 				store.setValue("architecture","");
-			
+
 			if(vendor.getSelectionIndex()!=-1)
 				store.setValue("vendor", vendor.getItem(vendor.getSelectionIndex()));
 			else
 				store.setValue("vendor","");
-			
+
 			if(chip.getSelectionIndex()!=-1)
 				store.setValue("chip", chip.getItem(chip.getSelectionIndex()));
 			else
 				store.setValue("chip","");
-			
+
 			if(board.getSelectionIndex()!=-1)
 				store.setValue("board", board.getItem(board.getSelectionIndex()));
 			else
 				store.setValue("board","");
-			
+
 			// if arch+vendor+chip is selected then return ok ...
 			return architecture.getSelectionIndex()!=-1 && vendor.getSelectionIndex()!=-1 && chip.getSelectionIndex()!=-1;
 		}
 		//return super.performOk();
 		return true ;
 	}
-	
+
 	private List<String> getDirList(String path, String pattern)
 	{
 		List<String> dirList = new ArrayList<String>();
-		
+
 		Enumeration<URL> entries = Platform.getBundle("org.eclipse.cdt.embsysregview.data").findEntries(path, pattern, false);
 
 		if (entries != null) {
 			while (entries.hasMoreElements()) {
 				URL entry = entries.nextElement();
-				
+
 				File x = new File(entry.getFile());
 				try {
 					String filename = x.getCanonicalFile().getName();
@@ -138,7 +138,7 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		}
 		return dirList;
 	}
-	
+
 	private void restoreStoredSettings()
 	{
 		// Try to fill out Combos with values from the Store	
@@ -147,7 +147,7 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		String store_vendor = store.getString("vendor");
 		String store_chip = store.getString("chip");
 		String store_board = store.getString("board");
-		
+
 		int index = architecture.indexOf(store_architecture);
 		if(index!=-1)
 		{
@@ -176,7 +176,7 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		else
 			architecture.setText("");
 	}
-	
+
 	private void fillArchitecture ()
 	{
 		for(String entry:getDirList("data", "*"))
@@ -185,7 +185,7 @@ public class PreferencePageEmbSys extends PreferencePage implements
 
 		restoreStoredSettings();
 	}
-	
+
 	private void fillVendor(String selectedArchitecture)
 	{
 		chip.setEnabled(false);
@@ -196,14 +196,14 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		vendor.removeAll();
 		chip.removeAll();
 		board.removeAll();
-		
+
 		for(String entry:getDirList("data/" + selectedArchitecture, "*"))
 			vendor.add(entry);
 
 		vendor.setText("");
 		descriptionText.setText("");
 	}
-	
+
 	private void fillChip(String selectedArchitecture, String selectedVendor)
 	{
 		board.setEnabled(false);
@@ -213,13 +213,13 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		board.removeAll();
 
 		for(String entry:getDirList("data/"	+ selectedArchitecture +"/"+ selectedVendor, "*.xml"))
-			
+
 			chip.add(entry.substring(0, entry.length()-4));
-		
+
 		chip.setText("");
 		descriptionText.setText("");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void fillBoard(String selectedArchitecture, String selectedVendor, String selectedChip)
 	{
@@ -251,10 +251,10 @@ public class PreferencePageEmbSys extends PreferencePage implements
 						else
 							bname = "-1";
 						board.add(bname);	
-						
+
 					}
 				}
-				
+
 				Element chip_description = root.getChild("chip_description");
 				if (chip_description!=null)
 					descriptionText.setText(chip_description.getText());
@@ -268,13 +268,13 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// enable only if there are boards to show
 		if (containsBoards)
 			board.setEnabled(true);
 		else
 			board.setEnabled(false);
-		
+
 		if(board.getItemCount()>0)
 			board.setText(board.getItem(0));
 		else
@@ -286,13 +286,13 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		Composite composite = new Composite(parent, SWT.NONE);
 		Composite left = new Composite(composite, SWT.NONE);
 		Composite right = new Composite(composite, SWT.NONE);
-		
+
 		MigLayout migLayout = new MigLayout("fill","[180,grow 0][fill,grow]","top");
 		composite.setLayout(migLayout);
-		
+
 		left.setLayoutData("width 100:180:180");
 		left.setLayout(new GridLayout(1, false));
-		
+
 		right.setLayoutData("grow,hmin 0,wmin 0");
 		right.setLayout(new FillLayout());
 
@@ -301,19 +301,19 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		architecture = new Combo(left, SWT.DROP_DOWN|SWT.READ_ONLY);		
 		architecture.setVisibleItemCount(10);
 		architecture.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,true,false));
-		
+
 		Label vendorLabel = new Label(left, SWT.LEFT);
 		vendorLabel.setText("Vendor:");
 		vendor = new Combo(left, SWT.DROP_DOWN|SWT.READ_ONLY);
 		vendor.setVisibleItemCount(10);
 		vendor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,true,false));
-		
+
 		Label chipLabel = new Label(left, SWT.LEFT);
 		chipLabel.setText("Chip:");
 		chip = new Combo(left, SWT.DROP_DOWN|SWT.READ_ONLY);
 		chip.setVisibleItemCount(20);
 		chip.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,true,false));
-		
+
 		Label boardLabel = new Label(left, SWT.LEFT);
 		boardLabel.setText("Board:");
 		board = new Combo(left, SWT.DROP_DOWN|SWT.READ_ONLY);
@@ -323,7 +323,7 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		Group descriptionGroup = new Group(right, SWT.NONE);
 		descriptionGroup.setText("Chip description");
 		descriptionGroup.setLayout(new MigLayout("fill"));
-		
+
 		descriptionText = new Text(descriptionGroup,SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP);		
 		descriptionText.setLayoutData("height 100%,width 100%,hmin 0,wmin 400");
 		descriptionText.setText("");
@@ -331,7 +331,6 @@ public class PreferencePageEmbSys extends PreferencePage implements
 		fD[0].setName("Lucida Console");
 		Font f = new Font(Display.getCurrent(), fD[0]);
 		descriptionText.setFont(f);
-		
 
 		architecture.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -350,7 +349,7 @@ public class PreferencePageEmbSys extends PreferencePage implements
 				fillBoard(architecture.getItem(architecture.getSelectionIndex()), vendor.getItem(vendor.getSelectionIndex()), chip.getItem(chip.getSelectionIndex()));
 			}
 		});
-		
+
 		architecture.setSize(500, 30);	
 
 		vendor.setSize(500, 30);

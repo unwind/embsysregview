@@ -47,7 +47,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.MemoryByte;
 import org.eclipse.debug.ui.DebugUITools;
 
-
 public class GDBSessionTranslator {
 	/**
 	 * Get Session Object from current debug context
@@ -89,7 +88,7 @@ public class GDBSessionTranslator {
 		if(null != session && isSessionTerminated(session)) return null; //do not return terminated sessions
 		return session;
 	}
-	
+
 	/**
 	 * Gets the MITarget from CDebugTarget 
 	 * @return MITarget or null on error
@@ -105,7 +104,7 @@ public class GDBSessionTranslator {
 		}
 		return null;
 	}
-	
+
 	static public boolean isSessionTerminated(Object session){
 		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
 		for(int i = 0; i < launches.length; i++){
@@ -116,7 +115,7 @@ public class GDBSessionTranslator {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Get Session Object out of ILaunch
 	 * @param launch
@@ -140,7 +139,7 @@ public class GDBSessionTranslator {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets CDebugtarget form debug context
 	 * @return CDebugtarget or null on error
@@ -164,9 +163,9 @@ public class GDBSessionTranslator {
 		}
 		return null;
 	}
-	
+
 	public static int maxWaitTimeInInMilliseconds = 5000; //5 seconds
-	
+
 	/**
 	 * Write a value to memory address.
 	 * @param session Debug session.
@@ -184,19 +183,19 @@ public class GDBSessionTranslator {
         }
 		return -1;
 	}
-	
+
 	static public int writeMemory(String address, String value, int iByteCount) throws TimeoutException {
 		return writeMemory(getSession(), address, value, iByteCount);
 	}
-	
+
 	static public int writeMemory(Object session, long address, long value, int iByteCount) throws TimeoutException {
 		return writeMemory(session, Long.toString(address), "0x" + Long.toHexString(value), iByteCount);
 	}
-	
+
 	static public int writeMemory(long address, long value, int iByteCount) throws TimeoutException {
 		return writeMemory(getSession(), address, value, iByteCount);
 	}
-	
+
 	/**
 	 * Read value from the target memory.
 	 * @param address Source address to read from.
@@ -212,19 +211,19 @@ public class GDBSessionTranslator {
         }
 		return -1;
 	}
-	
+
 	static public long readMemory(String address, int iByteCount) throws TimeoutException {
 		return readMemory(getSession(), address, iByteCount);
 	}
-	
+
 	static public long readMemory(Object session, long address, int iByteCount) throws TimeoutException {
 		return readMemory(session, Long.toString(address), iByteCount);
 	}
-	
+
 	static public long readMemory(long address, int iByteCount) throws TimeoutException {
 		return readMemory(getSession(), address, iByteCount);
 	}
-	
+
 	/**
 	 * Write a value to memory address.
 	 * @param session Debug session.
@@ -257,7 +256,7 @@ public class GDBSessionTranslator {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Read value from the target memory.
 	 * @param pluginID 
@@ -271,7 +270,7 @@ public class GDBSessionTranslator {
 			MIDataReadMemory commandDataReadMemory;
 			commandDataReadMemory = session.getCommandFactory().createMIDataReadMemory(0, address, MIFormat.HEXADECIMAL, iByteCount, 1, 1, null);
 			session.postCommand(commandDataReadMemory);
-			
+
 			if( !commandDataReadMemory.getMIOutput().getMIResultRecord().getResultClass().matches(MIResultRecord.ERROR) ) {
 				ret = commandDataReadMemory.getMIDataReadMemoryInfo().getMemories()[0].getData()[0];
 			} else {
@@ -285,7 +284,7 @@ public class GDBSessionTranslator {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * @throws TimeoutException 
 	 * @see GDbSessionTranslator#writeMemory(Object, String, String, int)
@@ -315,7 +314,7 @@ public class GDBSessionTranslator {
 					}
 				});
 			}};
-		
+
 		ImmediateExecutor.getInstance().execute(query);
 		MIDataWriteMemoryInfo data= null;
 		try {
@@ -336,7 +335,7 @@ public class GDBSessionTranslator {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * @throws TimeoutException 
 	 * @see GDbSessionTranslator#readMemory(String)
@@ -350,7 +349,7 @@ public class GDBSessionTranslator {
 		if(null == fGdb) return -1;
 		org.eclipse.cdt.dsf.mi.service.command.CommandFactory factory = fGdb.getCommandFactory();		
 		final ICommand<org.eclipse.cdt.dsf.mi.service.command.output.MIDataReadMemoryInfo> info_rm = factory.createMIDataReadMemory(fGdb.getContext(), 0, address, MIFormat.HEXADECIMAL, 1, 1, iByteCount, null);
-		
+
 		Query<org.eclipse.cdt.dsf.mi.service.command.output.MIDataReadMemoryInfo> query= new Query<org.eclipse.cdt.dsf.mi.service.command.output.MIDataReadMemoryInfo>() {
 			@Override
 			protected void execute(final DataRequestMonitor<org.eclipse.cdt.dsf.mi.service.command.output.MIDataReadMemoryInfo> rm)  {
@@ -362,7 +361,7 @@ public class GDBSessionTranslator {
 					}
 				});
 			}};
-		
+
 		ImmediateExecutor.getInstance().execute(query);
 		org.eclipse.cdt.dsf.mi.service.command.output.MIDataReadMemoryInfo data= null;
 		try {
@@ -380,7 +379,6 @@ public class GDBSessionTranslator {
 				boolean isLittleEndian = info.getMIOutput().toString().contains("little endian");
 				if(!isBigEndian && !isLittleEndian || isBigEndian && isLittleEndian) endianessknown = false;
 
-				
 				MemoryByte[] bytes = data.getMIMemoryBlock(); 
 
 				//TODO: Find better solution to create Long Variable
@@ -400,7 +398,6 @@ public class GDBSessionTranslator {
 					big = Utils.makeUnsigned(big, Utils.Arch32Bit);
 					ret = new Long(big.toString());
 
-
 				}else{
 					//System.out.println("Unknown endianess: "+info.getMIOutput().toString());
 					ret = -1;
@@ -416,9 +413,9 @@ public class GDBSessionTranslator {
 			tracker.dispose();
 		}
 		return ret;
-		
+
 	}
-	
+
 	/**
 	 * @throws TimeoutException 
 	 * @see CommandWrapperPlugin#postCLICommand(String, Object, String)
@@ -429,11 +426,11 @@ public class GDBSessionTranslator {
 		final IGDBControl fGdb = tracker.getService(IGDBControl.class);
 		if(null == fGdb) return null;
 		CLICommand<MIInfo> info = new CLICommand<MIInfo>(fGdb.getContext(), cLICommand);
-		
+
 		return executeQuery(info, "postCLICommand", "cLICommand="+cLICommand, session, tracker, fGdb, maximumTimeToWait);
 
 	}
-	
+
 	/**
 	 * Executes a dsf command and waits synchronous for the result
 	 * @param command to be executed

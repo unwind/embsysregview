@@ -71,7 +71,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	private Image selectedImage, unselectedImage, selectedFieldImage, unselectedFieldImage, infoImage, interpretationImage, configButtonImage;
 	static public GDBInterface GDBi;
 	private TreeElement currentEditedElement = null;
-	
+
 	/**
 	 * This is the Content Provider that present the Static Model to the
 	 * TreeViewer
@@ -81,7 +81,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 
 		public ViewContentProvider() {
 			initialize();
-			
+
 			Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener(){
 
 				@Override
@@ -96,7 +96,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 					}
 				}});
 		}
-		
+
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
@@ -137,7 +137,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			invisibleRoot = new TreeParent("", "");
 			try {
 				invisibleRoot = new RegisterXMLParser().LoadXML();
-				
+
 			} catch (JDOMException e) { 
 			} catch (ParseException e) {
 			}
@@ -160,7 +160,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		String store_vendor = store.getString("vendor");
 		String store_chip = store.getString("chip");
 		String store_board = store.getString("board");
-		
+
 		if(invisibleRoot == null || !invisibleRoot.hasChildren())
 			infoLabel.setText("ERROR: Please select a chip using the preference page (c++/Debug/EmbSys Register View)");
 		else
@@ -169,7 +169,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			else
 				infoLabel.setText("Arch: "+store_architecture+"  Vendor: "+store_vendor+"  Chip: "+store_chip+"  Board: "+store_board);
 	}
-	
+
 	/**
 	 * This is a callback that creates the viewer and initialize it.
 	 */
@@ -182,7 +182,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		URL fileURL5 = bundle.getEntry("icons/info.png");
 		URL fileURL6 = bundle.getEntry("icons/interpretation.png");
 		URL fileURL7 = bundle.getEntry("icons/config.png");
-		
+
 		try {
 			selectedImage = new Image(parent.getDisplay(),fileURL.openStream());
 			unselectedImage = new Image(parent.getDisplay(),fileURL2.openStream());
@@ -203,12 +203,12 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 
 		TreeViewerColumn column;
 		parent.setLayout(new MigLayout("fill","",""));
-		
+
 		header = new Composite(parent, SWT.NONE);
 		/*header.setLayout(new MigLayout("fill","",""));*/
 		header.setLayoutData("dock north,height 16px,width 100%,wmin 0,hmin 16,gap 0 0 -5 0");
 		RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
-	    
+
 	    rowLayout.marginLeft=-1;
 	    rowLayout.marginRight=0;
 	    rowLayout.marginTop=-1;
@@ -217,7 +217,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	    rowLayout.wrap=false;
 	    rowLayout.spacing=5;
 		header.setLayout(rowLayout);
-		
+
 		configButton = new Button(header,SWT.FLAT);
 		configButton.setImage(configButtonImage);
 		configButton.setSize(17, 17);
@@ -226,10 +226,10 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	    data.height = 17;
 	    configButton.setLayoutData(data);
 	    configButton.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseUp(MouseEvent e) {}
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
 				IPreferencePage page = new PreferencePageEmbSys();
@@ -246,7 +246,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				dialog.setMessage(page.getTitle());
 				dialog.open();
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {}
 		});
@@ -287,15 +287,14 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		viewer.getControl().setLayoutData("height 100%,width 100%,hmin 0,wmin 0");
 		viewer.getTree().setLinesVisible(true);
 		viewer.getTree().setHeaderVisible(true);
-		
-		
+
 		// Registername
 		column = new TreeViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(250);
 		column.getColumn().setMoveable(false);
 		column.getColumn().setText("Register");
 		column.setLabelProvider(new ColumnLabelProvider() {
-			
+
 			@Override
 			public Color getForeground(Object element) {
 				if (element instanceof TreeRegister)
@@ -304,7 +303,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				if (element instanceof TreeField)
 					if (((TreeRegister)((TreeField)element).getParent()).isRetrievalActive())	
 						return parent.getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN);
-				
+
 				return null;
 			}
 
@@ -368,7 +367,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 							return parent.getShell().getDisplay().getSystemColor(SWT.COLOR_RED);
 				return null;
 			}
-			
+
 			public String getText(Object element) {
 				if (element instanceof TreeGroup)
 					return "";
@@ -399,25 +398,24 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			}
 
 		});
-		
+
 		final TextCellEditor textCellEditor = new TextCellEditor(viewer.getTree());
 		textCellEditor.setValidator(new HexCellEditorValidator(viewer));
 		final ComboBoxCellEditor comboBoxCellEditor = new ComboBoxCellEditor(viewer.getTree(), new String[0], SWT.NONE);
-		
-		
+
 		comboBoxCellEditor.setValidator(new HexCellEditorValidator(viewer));
-		
+
 		((CCombo)comboBoxCellEditor.getControl()).addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selectionIndex = ((CCombo)comboBoxCellEditor.getControl()).getSelectionIndex();
-				
+
 				TreeElement obj = currentEditedElement;
 				if(obj instanceof TreeField)
 				{
 					long value=-1;
-					
+
 					if(selectionIndex!=-1)
 					{
 						value = ((TreeField)obj).getInterpretations().getValue(((CCombo)comboBoxCellEditor.getControl()).getItem(selectionIndex));
@@ -427,19 +425,19 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 						String svalue= ((CCombo)comboBoxCellEditor.getControl()).getText();
 						if (svalue.startsWith("0x"))
 							value=Long.valueOf(svalue.substring(2, svalue.length()), 16);
-						
+
 					}
 					if (value!=-1)
 						((TreeField)obj).setValue(value);
-					
+
 				}
-				
+
 				if (((TreeRegister)obj.getParent()).isWriteOnly())
 					updateTreeFields(invisibleRoot);
 				viewer.refresh();
-				
+
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
@@ -448,12 +446,12 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			@Override
 			public void applyEditorValue() {
 				int selectionIndex = ((CCombo)comboBoxCellEditor.getControl()).getSelectionIndex();
-								
+
 				TreeElement obj = currentEditedElement;
 				if(obj instanceof TreeField)
 				{
 					long value=-1;
-					
+
 					if(selectionIndex!=-1)
 					{
 						value = ((TreeField)obj).getInterpretations().getValue(((CCombo)comboBoxCellEditor.getControl()).getItem(selectionIndex));
@@ -463,13 +461,13 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 						String svalue= ((CCombo)comboBoxCellEditor.getControl()).getText();
 						if (svalue.startsWith("0x"))
 							value=Long.valueOf(svalue.substring(2, svalue.length()), 16);
-						
+
 					}
 					if (value!=-1)
 						((TreeField)obj).setValue(value);
-					
+
 				}
-					
+
 				if (((TreeRegister)obj.getParent()).isWriteOnly())
 					updateTreeFields(invisibleRoot);
 				viewer.refresh();
@@ -482,7 +480,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			public void editorValueChanged(boolean oldValidState,
 					boolean newValidState) {}
 		});
-		
+
 		column.setEditingSupport(new EditingSupport(viewer) {
 			@Override
 			protected boolean canEdit(Object element) {
@@ -497,7 +495,6 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				return false;
 			}
 
-			
 			@Override
 			protected CellEditor getCellEditor(Object element) {
 				if (element instanceof TreeField && ((TreeField)element).hasInterpretations())
@@ -525,7 +522,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				{
 				if (element instanceof TreeField && ((TreeField)element).getValue()!=-1)
 					return Utils.longtoHexString(((TreeField) element).getValue(),((TreeField) element).getBitLength()); 
-					
+
 				if (element instanceof TreeRegister && ((TreeRegister)element).getValue()!=-1)
 					return Utils.longtoHexString(((TreeRegister) element).getValue(), ((TreeRegister) element).getBitSize()); 
 				}  
@@ -541,7 +538,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 					{
 						String svalue=((String)value);
 						long lvalue=Long.valueOf(svalue.substring(2, svalue.length()), 16);
-						
+
 						TreeRegister treeRegister = ((TreeRegister) element);
 						if(treeRegister.getValue()!=-1 && treeRegister.getValue()!=lvalue)
 						{
@@ -552,29 +549,29 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 							viewer.refresh();
 						}
 					}
-					
+
 					if (element instanceof TreeField && ((String)value).startsWith("0x"))
 					{
 						String svalue=((String)value);
 						long fvalue=Long.valueOf(svalue.substring(2, svalue.length()), 16);
-						
+
 						TreeField treeField = ((TreeField) element);
 						if(treeField.getValue()!=-1 && treeField.getValue()!=fvalue)
 						{
 							TreeRegister treeRegister = ((TreeRegister)treeField.getParent());
-												
+
 							// calculate register value + modified field to write into register
 							long rvalue=treeRegister.getValue();
 							int bitLength = treeField.getBitLength();
 							int bitOffset = treeField.getBitOffset();
 							long mask;
-							
+
 							mask = (0xFFFFFFFFL >> (32 - bitLength)) << bitOffset;
 							rvalue = rvalue & (~mask) ; // clear field bits in register value
 							fvalue = fvalue << bitOffset; // shift field value into its position in the register
 							fvalue = fvalue & mask ; // just to be sure, cut everything but the field
 							rvalue = rvalue | fvalue ; // blend the field value into the register value
-							
+
 							// Update Value in Target
 							treeRegister.setAndWriteValue(rvalue);
 							if ( ((TreeRegister)(((TreeField) element).getParent())).isWriteOnly() )
@@ -587,7 +584,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				//viewer.refresh(element);
 			}
 		}); 
-		
+
 		// Binary Value
 		column = new TreeViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(200);
@@ -604,10 +601,10 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 					if (!((TreeRegister) ((TreeField)element).getParent()).isWriteOnly())
 						if (((TreeField)element).hasValueChanged())	
 							return parent.getShell().getDisplay().getSystemColor(SWT.COLOR_RED);
-				
+
 				return null;
 			}
-			
+
 			public String getText(Object element) {
 				if (element instanceof TreeGroup)
 					return "";
@@ -638,7 +635,6 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			}
 
 		});
-		
 
 		column.setEditingSupport(new EditingSupport(viewer) {
 			@Override
@@ -669,7 +665,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				viewer.refresh(element);
 			}
 		}); 
-		
+
 		// Register Reset Value (hex)
 		column = new TreeViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(80);
@@ -714,7 +710,6 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 
 		});
 
-		
 		// Register Address (hex)
 		column = new TreeViewerColumn(viewer, SWT.NONE);
 		column.getColumn().setWidth(80);
@@ -775,7 +770,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			public int getToolTipTimeDisplayed(Object object) {
 				return 0;
 			}
-			
+
 			public void update(ViewerCell cell) {
 				Object element = cell.getElement();
 				if (element instanceof TreeGroup)
@@ -786,7 +781,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				{
 					cell.setText(org.eclipse.cdt.embsysregview.views.Utils.getFirstNotEmptyTextLine(((TreeRegister) element).getDescription()).trim());
 				}
-			    
+
 				if (element instanceof TreeField)
 					if (((TreeField) element).hasInterpretation())
 					{
@@ -803,11 +798,11 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 					}
 			}
 		});
-		
+
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
-				
+
 				Object obj = ((IStructuredSelection) selection)
 						.getFirstElement();
 
@@ -825,7 +820,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 						}
 					}
 				}
-				
+
 				if (obj instanceof TreeRegisterGroup && selectedColumn == 0) {
 					TreeRegisterGroup treeRegisterGroup = ((TreeRegisterGroup)obj);
 					TreeElement[] treeElements = treeRegisterGroup.getChildren();
@@ -862,7 +857,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 				}		
 			}
 		};
-		
+
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
@@ -878,7 +873,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	public void dispose() {
 	   GDBi.dispose();
 	}
-	
+
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */

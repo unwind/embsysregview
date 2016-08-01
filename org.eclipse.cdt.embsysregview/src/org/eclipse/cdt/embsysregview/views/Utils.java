@@ -27,7 +27,7 @@ public class Utils {
 	 */
 	public static long convertbig2little(long value) {
 		long a,b,c,d;
-		
+
 		a=value>>24;
 		b=(value & (~0xFF00FFFFL))>>8;
 		c=(value & (~0xFFFF00FFL))<<8;
@@ -35,7 +35,7 @@ public class Utils {
 
 		return( a | b | c | d );
 	}
-	
+
 	private static Matcher getLineMatcher(String fulltext)
 	{
 		// Compile the pattern
@@ -43,11 +43,11 @@ public class Utils {
 	    Pattern pattern = Pattern.compile(patternStr, Pattern.MULTILINE);
 	    return pattern.matcher(fulltext);
 	}
-	
+
 	public static String getTextLine(int number, String fulltext)
 	{
 		Matcher matcher = getLineMatcher(fulltext);
-	    
+
 	    for(int i=1;i<=number;i++)
 	    {
 	    	if(matcher.find() && i==number)
@@ -55,11 +55,11 @@ public class Utils {
 	    }
 	    return "";
 	}
-	
+
 	public static String getFirstNotEmptyTextLine(String fulltext)
 	{
 		Matcher matcher = getLineMatcher(fulltext);
-	    
+
 	    while(matcher.find())
 	    {
 	    	if(!matcher.group(1).equals(""))
@@ -67,24 +67,24 @@ public class Utils {
 	    }
 	    return "";
 	}
-	
+
 	public static int countTextLines(String fulltext)
 	{
 		int i=0;
-		
+
 		Matcher matcher = getLineMatcher(fulltext);
-		
+
 	    while(matcher.find())
 	    	i++;
-	    
+
 	    return i;
 	}
-	
+
 	public static int getBitFromValue(int bitnr, long value)
 	{
 		return (int) ((value>>bitnr)%2);
 	}
-	
+
 	public static String longtobinarystring(long wert, int bits) {
 		StringBuilder text = new StringBuilder();
 
@@ -95,13 +95,13 @@ public class Utils {
 		text.reverse();
 		return text.toString();
 	}
-	
+
 	public static String longtoHexString(long wert, int bits) {
-		
+
 		int hexdigits=bits/4;
 		if(bits%4!=0)
 			hexdigits++;
-		
+
 		StringBuilder hex = new StringBuilder();
 		hex.append("0x");
 		String x = Long.toHexString(wert);
@@ -111,19 +111,19 @@ public class Utils {
 		hex.append(x.toUpperCase());
 		return hex.toString();
 	}
-	
+
 	// Maximum values for signed data types of the marked bit length.
 	public static final BigInteger Max8Bit  = BigInteger.valueOf(Byte.MAX_VALUE).add(BigInteger.ONE);
 	public static final BigInteger Max16Bit = BigInteger.valueOf(Short.MAX_VALUE).add(BigInteger.ONE);
 	public static final BigInteger Max32Bit = BigInteger.valueOf(Integer.MAX_VALUE).add(BigInteger.ONE);
 	public static final BigInteger Max64Bit = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
-	
+
 	// Constants for the architecture bit depth.
 	public static final int Arch8Bit  = 8;
 	public static final int Arch16Bit = 16;
 	public static final int Arch32Bit = 32;
 	public static final int Arch64Bit = 64;
-	
+
 	/**
 	 * Convert a signed value of bitdepth to its unsigned equivilent.
 	 * @param signed Signed value.
@@ -155,7 +155,7 @@ public class Utils {
 			}
 			unsigned = MaxSignedValue.add(MaxSignedValue.add(signed));
 		}
-		
+
 		return unsigned;
 	}
 }

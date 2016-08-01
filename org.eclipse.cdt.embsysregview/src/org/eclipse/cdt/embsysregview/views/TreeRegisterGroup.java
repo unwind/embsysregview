@@ -11,7 +11,7 @@
 package org.eclipse.cdt.embsysregview.views;
 
 public class TreeRegisterGroup extends TreeParent {
-	
+
 	public TreeRegisterGroup(String name, String description) {
 		super(name, description);	
 	}

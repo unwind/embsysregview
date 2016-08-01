@@ -34,33 +34,33 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 	private MISession miSession=null;
 	private List<IGDBInterfaceSuspendListener> suspendListener = new ArrayList<IGDBInterfaceSuspendListener>();
 	private List<IGDBInterfaceTerminateListener> terminateListener = new ArrayList<IGDBInterfaceTerminateListener>();
-	
+
 	public GDBInterfaceStandard(){
 		if(!hasActiveDebugSession())
 			init();
 	}
-	
+
 	public void addSuspendListener(IGDBInterfaceSuspendListener listener)
 	{
 		suspendListener.add(listener);
 	}
-	
+
 	public void addterminateListener(IGDBInterfaceTerminateListener listener)
 	{
 		terminateListener.add(listener);
 	}
-	
+
 	public void dispose()
 	{
 		miSession=null;
 		DebugPlugin.getDefault().removeDebugEventListener(this);
 	}
-	
+
 	private void init()
 	{
 		DebugPlugin.getDefault().addDebugEventListener(this);
 	}
-	
+
 	public boolean hasActiveDebugSession()
 	{
 		if(miSession==null)
@@ -68,14 +68,14 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 		else
 			return true;
 	}
-	
+
 	public long readMemory(long laddress, int iByteCount)
 	{
 		if(!hasActiveDebugSession())
 			return -1;
-		
+
 		long value=-1;
-		
+
 		CommandFactory factory = miSession.getCommandFactory();
 		MIDataReadMemory mem = factory.createMIDataReadMemory( 0, Long.toString(laddress),
 		                     								   MIFormat.HEXADECIMAL, iByteCount, 1, 1, null );
@@ -91,14 +91,14 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 		}
 		return value;
 	}
-	
+
 	public int writeMemory(long laddress, long lvalue, int iByteCount)
 	{
 		if(!hasActiveDebugSession())
 			return 0;
-		
+
 		CommandFactory factory = miSession.getCommandFactory();
-		
+
 		String value = "0x" + Long.toHexString(lvalue);
 		String address = Long.toString(laddress);
 		MIDataWriteMemory mw = factory.createMIDataWriteMemory(0,
@@ -106,7 +106,7 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 		try {
 			miSession.postCommand(mw);
 			MIInfo info = mw.getMIInfo();
-			
+
 			if (info == null) {
 				// TODO: handle ERROR ???
 			}
@@ -115,7 +115,7 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 		}
 		return iByteCount;
 	}
-	
+
 	/**
 	 * Handle DebugEvents while an active Debug Session
 	 * TODO: find a non Discouraged method to get miSession
@@ -124,12 +124,12 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 	public void handleDebugEvents(DebugEvent[] events)
 	{
 		for (DebugEvent event : events) {
-			
+
 			Object source = event.getSource();
-			
+
 			if (event.getKind() == DebugEvent.SUSPEND && source instanceof CDebugTarget) {
 				System.out.println("DebugEvent " + event.toString());
-				
+
 				CDebugTarget debugTarget = (CDebugTarget) source;
 
 				ICDISession cdiSession = debugTarget.getCDISession();
@@ -147,7 +147,7 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 					Target miTarget = (Target) cdiTarget;
 					miSession = miTarget.getMISession();
 				}
-				
+
 				for(IGDBInterfaceSuspendListener listener:suspendListener)
 					listener.gdbSuspendListener();
 			}
@@ -157,5 +157,5 @@ public class GDBInterfaceStandard extends GDBInterface implements IDebugEventSet
 			}
 		}
 	}
-	
+
 }

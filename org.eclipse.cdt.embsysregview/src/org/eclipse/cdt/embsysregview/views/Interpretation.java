@@ -21,7 +21,7 @@ public class Interpretation implements Comparable<Interpretation> {
 	}
 
 	String interpretation;
-	
+
 	public Interpretation(long value, String interpretation) {
 		this.interpretation=interpretation;
 		this.value=value;
@@ -35,7 +35,7 @@ public class Interpretation implements Comparable<Interpretation> {
 			return -1;
 		if(this.value <  interpretation.getValue())
 			return 1;
-		
+
 		return 0;
 	}
 }

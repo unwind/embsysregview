@@ -14,12 +14,12 @@ public abstract class TreeElement {
 	private String name;
 	private String description;
 	private TreeElement parent;
-	
+
 	public TreeElement(String name, String description) {
 		this.name=name;
 		this.description=description;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

@@ -17,7 +17,7 @@ import java.util.Iterator;
 public class Interpretations {
 	private ArrayList<Interpretation> interpretations;
 	private TreeField treeField;
-	
+
 	public Interpretations() {
 		interpretations = new ArrayList<Interpretation>();
 	}
@@ -26,11 +26,10 @@ public class Interpretations {
 		this.treeField = treeField;
 	}
 
-
 	public void addInterpretation(long value, String interpretation) {
 		interpretations.add(new Interpretation(value,interpretation));
 	}
-	
+
 	public String getInterpretation(long value){
 		Iterator<Interpretation> it = interpretations.iterator();
 		while(it.hasNext()){
@@ -40,7 +39,7 @@ public class Interpretations {
 		}
 		return "";
 	}
-	
+
 	public long getValue(String interpretation){
 		Iterator<Interpretation> it = interpretations.iterator();
 		while(it.hasNext()){
@@ -50,7 +49,7 @@ public class Interpretations {
 		}
 		return -1;
 	}
-	
+
 	public String[] getInterpretations(){
 		Iterator<Interpretation> it = interpretations.iterator();
 		int j=1;
@@ -63,14 +62,14 @@ public class Interpretations {
 		}
 		return ret;
 	}
-	
+
 	public void sort() {
 		Collections.sort(interpretations);
 	}
 
 	public boolean containsKey(long value) {
 		Iterator<Interpretation> it = interpretations.iterator();
-		
+
 		while(it.hasNext()){
 			Interpretation i = it.next();
 				if(i.getValue()==value)
@@ -78,7 +77,7 @@ public class Interpretations {
 		}
 		return false;
 	}
-	
+
 	public boolean hasInterpretations() {
 		return !interpretations.isEmpty();
 	}

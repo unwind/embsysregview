@@ -22,7 +22,6 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.contexts.DebugContextEvent;
 import org.eclipse.debug.ui.contexts.IDebugContextListener;
 
-
 public class GDBEventProvider implements IDebugContextListener {
 
 		private DSFSessionStartedListener startedlistener;
@@ -38,14 +37,14 @@ public class GDBEventProvider implements IDebugContextListener {
 			DsfSession.addSessionEndedListener(endedlistener);
 			DebugUITools.getDebugContextManager().addDebugContextListener(this);
 		}
-		
+
 		/**
 		 * Dsf Session started listener, handles create events -> fires debugevent
 		 * creates SessionListener for Resume and Suspend events
 		 * @author Eduard Bechtold, I IA AS R&D DH AMB 2
 		 */
 		public class DSFSessionStartedListener implements SessionStartedListener {
-			
+
 			public DSFSessionStartedListener() {
 				super();
 				DsfSession[] sessions = DsfSession.getActiveSessions();
@@ -74,7 +73,7 @@ public class GDBEventProvider implements IDebugContextListener {
 		 * @author Eduard Bechtold, I IA AS R&D DH AMB 2
 		 */
 		public class SessionListener {
-			
+
 			private String sessionID;
 
 			public SessionListener(DsfSession session) {
@@ -101,7 +100,7 @@ public class GDBEventProvider implements IDebugContextListener {
 			}
 
 		}
-		
+
 		public class DsfSessionDebugEvent{
 			private DsfSession session;
 			public DsfSessionDebugEvent(DsfSession session){
@@ -112,7 +111,6 @@ public class GDBEventProvider implements IDebugContextListener {
 			}
 		}
 
-
 	/**
 	 * Closes the listener, removes DsfSession listener
 	 */
@@ -121,16 +119,14 @@ public class GDBEventProvider implements IDebugContextListener {
 		DsfSession.removeSessionEndedListener(endedlistener);
 		DebugUITools.getDebugContextManager().removeDebugContextListener(this);
 	}
-	
-
 
 	@Override
 	public void debugContextChanged(DebugContextEvent event) {
 		DebugEvent e = new DebugEvent(new DebugContextChangedDebugEvent(GDBSessionTranslator.getSession(event.getContext())), DebugEvent.CHANGE);
 		DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[]{e});
-		
+
 	}
-	
+
 	public class DebugContextChangedDebugEvent{
 		private Object session;
 		public DebugContextChangedDebugEvent(Object session){

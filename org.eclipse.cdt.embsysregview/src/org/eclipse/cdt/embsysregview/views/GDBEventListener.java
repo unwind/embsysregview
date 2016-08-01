@@ -22,22 +22,22 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 	private GDBEventProvider provider=null;
 	private List<IGDBInterfaceSuspendListener> suspendListener = new ArrayList<IGDBInterfaceSuspendListener>();
 	private List<IGDBInterfaceTerminateListener> terminateListener = new ArrayList<IGDBInterfaceTerminateListener>();
-	
+
 	public GDBEventListener(){
 		if(!hasActiveDebugSession())
 			init();
 	}
-	
+
 	public void addSuspendListener(IGDBInterfaceSuspendListener listener)
 	{
 		suspendListener.add(listener);
 	}
-	
+
 	public void addterminateListener(IGDBInterfaceTerminateListener listener)
 	{
 		terminateListener.add(listener);
 	}
-	
+
 	public void dispose()
 	{
 		currentSession=null;
@@ -45,13 +45,13 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 		provider.dispose();
 		provider=null;
 	}
-	
+
 	private void init()
 	{
 		DebugPlugin.getDefault().addDebugEventListener(this);
 		provider = new GDBEventProvider();
 	}
-	
+
 	public boolean hasActiveDebugSession()
 	{
 		if(currentSession==null)
@@ -59,7 +59,7 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 		else
 			return true;
 	}
-	
+
 	public long readMemory(long laddress, int iByteCount)
 	{
 		try {
@@ -69,7 +69,7 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 		}
 		return -1;
 	}
-	
+
 	public int writeMemory(long laddress, long lvalue, int iByteCount)
 	{
 		try {
@@ -79,7 +79,7 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Handle DebugEvents
 	 */
@@ -87,7 +87,7 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 	public void handleDebugEvents(DebugEvent[] events)
 	{
 		for (DebugEvent event : events) {
-			
+
 			Object source = event.getSource();
 			Object sourceSession = null;
 			Object currentSession = GDBSessionTranslator.getSession();
@@ -112,7 +112,7 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 			//source session should always be not null and the same as current (do not handle events not from current selected session!)
 			if(sourceSession == null || sourceSession != currentSession) 
 				return;
-			
+
 			if (event.getKind() == DebugEvent.SUSPEND) {
 				for(IGDBInterfaceSuspendListener listener:suspendListener)
 					listener.gdbSuspendListener();
@@ -123,5 +123,5 @@ public class GDBEventListener extends GDBInterface implements IDebugEventSetList
 			}
 		}
 	}
-	
+
 }

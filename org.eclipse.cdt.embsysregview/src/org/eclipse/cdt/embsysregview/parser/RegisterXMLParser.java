@@ -69,7 +69,7 @@ public class RegisterXMLParser {
 			return ParseXML(root, tempRoot);
 		}
 	}
-	
+
 	 /* Tree Hierarchy (Base Class TreeElement):
 	  * TreeParant
 	  *   TreeGroup
@@ -82,7 +82,7 @@ public class RegisterXMLParser {
 	 * Parse an SVD xml file
 	 */
 	private TreeParent ParseSVD(Element root, TreeParent tempRoot) throws ParseException, DataConversionException {
-		
+
 		TreeGroup oldTreeGroup = null;
 
 		Element peripherals = root.getChild("peripherals");
@@ -114,7 +114,7 @@ public class RegisterXMLParser {
 					gdescription = attr_gdescription.getValue().replaceAll("( )+", " ");
 				else
 					gdescription = "";
-				
+
 				// Handle derivedFrom
 				Attribute attr_derivedFrom = group.getAttribute("derivedFrom");
 				String derivedFrom;
@@ -170,7 +170,7 @@ public class RegisterXMLParser {
 							tmpgdescription = gdescription.substring(0, gdescription.length()-1).trim();
 						} else
 							tmpgdescription = gdescription;
-						
+
 						obj_group = new TreeGroup(gname, tmpgdescription);
 						tempRoot.addChild(obj_group);
 					}
@@ -178,7 +178,7 @@ public class RegisterXMLParser {
 				} else {
 					String expression = "_?[0-9]+$";
 					String uniqgroup = rgname.replaceAll(expression, "");
-					
+
 					if(oldTreeGroup!=null && oldTreeGroup.getName().equals(uniqgroup))
 						obj_group = oldTreeGroup;
 					else {
@@ -190,7 +190,6 @@ public class RegisterXMLParser {
 
 				TreeRegisterGroup obj_registergroup = new TreeRegisterGroup(rgname, gdescription);
 				obj_group.addChild(obj_registergroup);
-				
 
 				Element registers = group.getChild("registers");
 				if (registers != null) {
@@ -223,8 +222,7 @@ public class RegisterXMLParser {
 							else
 								// handle missing 0x ... grrrr
 								raddress = Long.parseLong(attr_roffsetaddress.getValue());
-																							
-																								
+
 						// throw new ParseException("register address invalid: "
 						// + attr_roffsetaddress.getValue(), 1);
 						else
@@ -267,7 +265,6 @@ public class RegisterXMLParser {
 								rsize = Integer.parseInt(attr_rsize.getValue()) / 8;
 						else
 							rsize = 4;
-						
 
 						// TODO: calculate real address ... baseAddress+raddress
 						long lbaseAddress = Long.parseLong(baseAddress.substring(2), 16);
@@ -285,7 +282,7 @@ public class RegisterXMLParser {
 							rdim = Integer.parseInt(attr_rdim.getValue(), 10);
 						else
 							rdim = 1; // just one element
-						
+
 						Element attr_rdimIncrement = register.getChild("dimIncrement");
 						int rdimIncrement;
 						// TODO: handle numbers with 0x
@@ -303,14 +300,14 @@ public class RegisterXMLParser {
 							rdimIndex = attr_rdimIndex.getValue();
 						else
 							rdimIndex = "";
-						
+
 						if (rdim>1) {
 							System.out.println("DIM Register: " + rname + " " + rdescription + " " + lbaseAddress + " "
 									+ raddress + " " + rresetvalue + " " + raccess + " " + rsize + " " + rdim + " " + rdimIncrement + " " + rdimIndex);
 						}
 						int begIdx=0, commaIdx=0;
 						Boolean isCommaList, isRangeList; 
-						
+
 						isCommaList = rdimIndex.indexOf(',', 0)!=-1; /* e.g. "0,1,2,3" */
 						isRangeList = rdimIndex.indexOf('-', 0)!=-1; /* e.g. "0-3" */ // \todo not handled yet! */
 						int rangeOffset = 0;
@@ -322,7 +319,7 @@ public class RegisterXMLParser {
 					for (int i=0; i<rdim; i++) { // << EST
 						if (rdim>1) {
 							String s, r;
-							
+
 							if (isCommaList) {
 								if (i<rdim-1) {
 									commaIdx = rdimIndex.indexOf(',', begIdx); /* find position of ',' in "1,2,3,4" */
@@ -402,7 +399,7 @@ public class RegisterXMLParser {
 									{
 										String range_string = attr_fbitrange.getValue();
 										String range = range_string.substring(1, range_string.length() - 1);
-	
+
 										String[] rangeArray = range.split(":");
 										// so 0:0 means [endoffset:startoffset] -> offset=startoffset  length=endoffset-startoffset+1 -> offset 0 ...length 1
 										fbitoffset = Byte.valueOf(rangeArray[1]);
@@ -417,7 +414,7 @@ public class RegisterXMLParser {
 										} else
 											throw new ParseException("field requires some sort of start-end bit marker", 1);
 									}
-										
+
 								}
 
 								Interpretations interpretations = new Interpretations();
@@ -450,7 +447,7 @@ public class RegisterXMLParser {
 											name = attr_name.getValue();
 										else
 											throw new ParseException("enumeratedValue requires name", 1);
-										
+
 										// Mandatory/Optional attribute description
 										// Optional for SiliconLabortories SVD Files .. they sometimes miss descriptions
 										Element attr_text = interpretation.getChild("description");
@@ -460,8 +457,6 @@ public class RegisterXMLParser {
 										else
 											text = name;
 											//throw new ParseException("enumeratedValue requires description", 1);
-
-										
 
 										interpretations.addInterpretation(key, name + ": " + text);
 									}

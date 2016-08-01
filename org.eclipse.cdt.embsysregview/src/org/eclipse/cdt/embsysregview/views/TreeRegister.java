@@ -21,7 +21,7 @@ public class TreeRegister extends TreeParent{
 	private long registerAddress;
 	private boolean retrievalActive = false;
 	private int size=4;
-	
+
 	public boolean isReadWrite()
 	{
 		return (getType().toUpperCase().equals("RW") || 
@@ -30,14 +30,14 @@ public class TreeRegister extends TreeParent{
 				getType().toUpperCase().equals("RW1S") || 
 				getType().toUpperCase().equals("RWH"));
 	}
-	
+
 	public boolean isReadOnly()
 	{
 		return (getType().toUpperCase().equals("RO") || 
 				getType().toUpperCase().equals("RC") ||
 				getType().toUpperCase().equals("R"));
 	}
-	
+
 	public boolean isWriteOnly()
 	{
 		return (getType().toUpperCase().equals("WO") || 
@@ -46,12 +46,12 @@ public class TreeRegister extends TreeParent{
 				getType().toUpperCase().equals("W1S") || 
 				getType().toUpperCase().equals("W1"));
 	}
-	
+
 	public boolean hasValueChanged()
 	{
 		return (old_value!=value);
 	}
-	
+
 	public boolean isRetrievalActive() {
 		return retrievalActive;
 	}
@@ -71,7 +71,7 @@ public class TreeRegister extends TreeParent{
 		this.type=type;		
 		this.size=size;
 	}
-	
+
 	protected long getOldValue()
 	{
 		return old_value;
@@ -83,7 +83,7 @@ public class TreeRegister extends TreeParent{
 		else
 			return value;
 	}
-	
+
 	public long getResetValue() {
 		return resetValue;
 	}
@@ -91,7 +91,7 @@ public class TreeRegister extends TreeParent{
 	public String getType() {
 		return type;
 	}
-	
+
 	/**
 	 * Sets the Register
 	 */
@@ -99,7 +99,7 @@ public class TreeRegister extends TreeParent{
 	{
 		this.value=lvalue;
 	}
-	
+
 	/**
 	 * Sets the Registers value and writes it to the device
 	 */
@@ -114,7 +114,7 @@ public class TreeRegister extends TreeParent{
 			writeValue();
 		}
 	}
-	
+
 	/**
 	 * Write value to the device 
 	 */
@@ -122,7 +122,7 @@ public class TreeRegister extends TreeParent{
 	{
 		EmbSysRegView.GDBi.writeMemory(getRegisterAddress(), getValue(), getByteSize());
 	}
-	
+
 	/**
 	 * Write value to the device 
 	 * 
@@ -132,7 +132,7 @@ public class TreeRegister extends TreeParent{
 	{
 		EmbSysRegView.GDBi.writeMemory(getRegisterAddress(), value, getByteSize()); 
 	}
-	
+
 	/**
 	 * Reads the Registers value from live data in the Debug Context
 	 */
@@ -160,12 +160,12 @@ public class TreeRegister extends TreeParent{
 			value=-1;
 		}
 	}
-	
+
 	public int getBitSize() 
 	{
 		return size*8;
 	}
-	
+
 	public int getByteSize() 
 	{
 		return size;

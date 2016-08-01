@@ -58,7 +58,7 @@ public class PreferencePageEmbSysBehavior extends PreferencePage implements
 		if(bitbuttons!=null && combolength != null )
 		{	
 			IPreferenceStore store = getPreferenceStore();
-			
+
 			store.setValue("bitbuttons", bitbuttons.getSelection());
 			if(combolength.getSelectionIndex()!=-1)
 				store.setValue("combolength", Integer.valueOf(combolength.getItem(combolength.getSelectionIndex())));
@@ -67,33 +67,32 @@ public class PreferencePageEmbSysBehavior extends PreferencePage implements
 		// there is no value that can be not ok
 		return true;
 	}
-	
+
 	private void restoreStoredSettings()
 	{
 		IPreferenceStore store = getPreferenceStore();
-		
+
 		boolean store_bitbuttons = store.getBoolean("bitbuttons");
 		bitbuttons.setSelection(store_bitbuttons);
-		
+
 		int store_combolength = store.getInt("combolength");
 		combolength.setText(String.valueOf(store_combolength));
-		
-		
+
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {		
 		//Composite composite = new Composite(parent, SWT.NONE);
 		//composite.setLayout(new RowLayout());
-		
+
 		//parent.setLayout(new RowLayout());
-		
+
 		bitbuttons = new Button(parent,SWT.CHECK);
 		bitbuttons.setText("Binary column Bit Buttons immediate effect");
 		bitbuttons.setToolTipText("LONG DESCR..."); // TODO: fill out ...
 		bitbuttons.setSelection(false);
 		//bitbuttons.setLocation(30, 30);
-		
+
 		Label combolength_label = new Label(parent,SWT.NONE);
 		combolength_label.setText("Number of elements shown in drop down List (Interpretations in Hex Column)");
 		combolength = new Combo(parent, SWT.DROP_DOWN);
@@ -102,7 +101,7 @@ public class PreferencePageEmbSysBehavior extends PreferencePage implements
 		combolength.add("10");
 		combolength.add("15");
 		combolength.add("20");
-		
+
 		restoreStoredSettings();
 		parent.pack();
 		//return composite;

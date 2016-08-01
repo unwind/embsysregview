@@ -38,12 +38,12 @@ public class BinaryButtonsCellEditor extends CellEditor {
 	public BinaryButtonsCellEditor(Composite parent) {
 		super(parent);
 	}
-	
+
 	public BinaryButtonsCellEditor(Composite parent, TreeViewer viewer) {
 		super(parent);
 		this.viewer=viewer;
 	}
-	
+
 	private void updateViewer(final Object Element) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -89,11 +89,11 @@ public class BinaryButtonsCellEditor extends CellEditor {
 			composite.setFocus();
 		}
 	}
-	
+
 	protected void updateBinaryValue(Object Element, boolean updateView)
 	{
 		long value = 0;
-		
+
 		for (int i = b.length-1; i >= 0; i--)
 			value = (value << 1) + Integer.valueOf(b[i].getText());
 
@@ -103,7 +103,7 @@ public class BinaryButtonsCellEditor extends CellEditor {
 		{
 			((TreeField) Element).setValue(value);
 		}
-		
+
 		if(updateView==true)
 			updateViewer(Element);
 	}
@@ -113,7 +113,7 @@ public class BinaryButtonsCellEditor extends CellEditor {
 		int bitsize = 0;
 		long regvalue = -1;
 		element = (TreeElement)value;
-		
+
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store_bitbuttons = store.getBoolean("bitbuttons");
 
@@ -189,7 +189,7 @@ public class BinaryButtonsCellEditor extends CellEditor {
 					b[i].setToolTipText("Bit " +
 							(i+((TreeField) element).getBitOffset()));
 				}
-				
+
 				// add separator between each nibble
 				if ((i>0)&&(i<bitsize-1)&&((i%4)==0)) {
 					RowData ldata = new RowData();
@@ -198,11 +198,9 @@ public class BinaryButtonsCellEditor extends CellEditor {
 				    Label l = new Label(composite, SWT.SEPARATOR | SWT.VERTICAL);
 				    l.setLayoutData(ldata);
 				}
-					
+
 			}
 
-			
-			
 			// show set button only if immediate effect is disabled
 			if(store_bitbuttons==false)
 			{
@@ -213,15 +211,15 @@ public class BinaryButtonsCellEditor extends CellEditor {
 			    data.height = 19;
 			    setButton.setLayoutData(data);
 				setButton.addMouseListener(new MouseListener() {
-	
+
 					@Override
 					public void mouseUp(MouseEvent e) {}
-	
+
 					@Override
 					public void mouseDown(MouseEvent e) {
 						updateBinaryValue(element, true);
 					}
-	
+
 					@Override
 					public void mouseDoubleClick(MouseEvent e) {}
 				});

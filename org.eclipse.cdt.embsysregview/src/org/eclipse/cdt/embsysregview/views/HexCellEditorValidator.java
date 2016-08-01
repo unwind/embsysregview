@@ -16,9 +16,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
 public class HexCellEditorValidator implements ICellEditorValidator {
-	
+
 	TreeViewer viewer;
-	
+
 	public HexCellEditorValidator(TreeViewer viewer) {
 		super();
 		this.viewer = viewer;
@@ -26,7 +26,7 @@ public class HexCellEditorValidator implements ICellEditorValidator {
 
 	@Override
 	public String isValid(Object value) {
-		
+
 				if(value instanceof String && ((String)value).startsWith("0x"))
 				{
 					String svalue=((String)value);
@@ -44,7 +44,7 @@ public class HexCellEditorValidator implements ICellEditorValidator {
 						else
 							return "out of range";
 					}catch(NumberFormatException nfe){
-						
+
 					}
 				}	
 				return null;
