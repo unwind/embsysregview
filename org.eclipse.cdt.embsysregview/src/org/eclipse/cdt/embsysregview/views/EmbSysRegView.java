@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.cdt.embsysregview.views;
 
-import java.awt.Toolkit;
 import java.net.URL;
 import java.text.ParseException;
 import net.miginfocom.swt.MigLayout;
@@ -37,8 +36,6 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
