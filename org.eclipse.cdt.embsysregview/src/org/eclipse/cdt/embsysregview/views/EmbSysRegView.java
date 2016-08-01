@@ -209,13 +209,13 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		header.setLayoutData("dock north,height 16px,width 100%,wmin 0,hmin 16,gap 0 0 -5 0");
 		RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
 
-	    rowLayout.marginLeft=-1;
-	    rowLayout.marginRight=0;
-	    rowLayout.marginTop=-1;
-	    rowLayout.marginBottom=0;
-	    rowLayout.fill=true;
-	    rowLayout.wrap=false;
-	    rowLayout.spacing=5;
+		rowLayout.marginLeft=-1;
+		rowLayout.marginRight=0;
+		rowLayout.marginTop=-1;
+		rowLayout.marginBottom=0;
+		rowLayout.fill=true;
+		rowLayout.wrap=false;
+		rowLayout.spacing=5;
 		header.setLayout(rowLayout);
 
 		configButton = new Button(header,SWT.FLAT);
@@ -865,7 +865,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 
 	@Override
 	public void dispose() {
-	   GDBi.dispose();
+		GDBi.dispose();
 	}
 
 	/**
