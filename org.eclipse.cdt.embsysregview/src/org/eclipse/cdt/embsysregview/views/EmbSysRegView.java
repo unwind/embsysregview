@@ -62,7 +62,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 	protected TreeViewer viewer;
 	private TreeParent invisibleRoot;
 	private Label infoLabel;
-	private Button configButton, collapseButton, copyButton;
+	private Button configButton, collapseButton, activateAllButton, copyButton;
 	private Composite header;
 	private Action doubleClickAction;
 	private Image selectedImage, unselectedImage, selectedFieldImage, unselectedFieldImage, infoImage, interpretationImage, configButtonImage;
@@ -250,6 +250,18 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			public void handleEvent(Event e) {
 				if(e.type == SWT.Selection) {
 					viewer.collapseAll();
+				}
+			}
+		});
+
+		activateAllButton = new Button(header, SWT.FLAT);
+		activateAllButton.setLayoutData(new RowData(17, 17));
+		activateAllButton.setText("*");		// Not very clear, should/could be some custom graphics featuring the color green, perhaps?
+		activateAllButton.setToolTipText("Activate all registers (or none, if Control is pressed)");
+		activateAllButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				if(e.type == SWT.Selection) {
+					activateAll((e.stateMask & SWT.CONTROL) == 0);
 				}
 			}
 		});
@@ -910,6 +922,27 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		adder.add(invisibleRoot);
 	}
 
+	public void activateAll(boolean newActivationStatus) {
+		class ActivationSetter {
+			boolean newActivationStatus;
+			public ActivationSetter(boolean newActivationStatus) {
+				this.newActivationStatus = newActivationStatus;
+			}
+			public void set(TreeElement te) {
+				if (te instanceof TreeRegister) {
+					((TreeRegister) te).setRetrievalActive(newActivationStatus);
+				}
+				else if (te instanceof TreeParent) {
+					final TreeParent tp = (TreeParent) te;
+					for (final TreeElement ce : tp.getChildren())
+						set(ce);
+				}
+			}
+		}
+		final ActivationSetter as = new ActivationSetter(newActivationStatus);
+		as.set(invisibleRoot);
+		viewer.refresh();
+	}
 	/**
 	 * Clears Data from all TreeFields
 	 */
