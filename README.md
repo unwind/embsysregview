@@ -17,4 +17,10 @@ and here's how it looks with my changes:
 
 ![EmbSysRegView after changes](https://raw.githubusercontent.com/unwind/embsysregview/master/org.eclipse.cdt.embsysregview_website/htdocs/img/unwind-after.png)
 
+The new buttons in the top-left corner are:
+
+- Collapse all
+- Activate all
+- Copy active registers to clipboard
+
 
