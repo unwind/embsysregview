@@ -37,7 +37,9 @@ The new (tiny) buttons in the top-left corner are:
 
  This copies the name and value of all active (green) registers to the system clipboard, as text.
  It will look something like this:
- `REG_A=0`
- `REG_B=0`
+
+    REG_A=0
+    REG_B=0
+
  and so on, for made-up register names `REG_A` and `REG_B`.
  Note that only active registers are copied, since EmbSysRegView doesn't know the value of non-green registers.
