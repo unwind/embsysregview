@@ -31,6 +31,7 @@ The new (tiny) buttons in the top-left corner are:
 
  This activates ("turns green") all registers, causing their state to be updated when you single-step.
  If you click this with the <kbd>Control</kbd> key held down, it will instead deactivate ("turn black") all registers.
+ If <kbd>Shift</kbd> is held down, only registers that are expanded, i.e. visible in the tree, are affected.
  Operating on all registers like this is a bit blunt, but sometimes useful, especially with the copy to clipboard button.
 
 - Copy active registers to clipboard

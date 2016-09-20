@@ -257,11 +257,11 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		activateAllButton = new Button(header, SWT.FLAT);
 		activateAllButton.setLayoutData(new RowData(17, 17));
 		activateAllButton.setText("*");		// Not very clear, should/could be some custom graphics featuring the color green, perhaps?
-		activateAllButton.setToolTipText("Activate all registers (or none, if Control is pressed)");
+		activateAllButton.setToolTipText("Activate all registers (or none, if Control is pressed); press Shift to only affect visible registers");
 		activateAllButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				if(e.type == SWT.Selection) {
-					activateAll((e.stateMask & SWT.CONTROL) == 0);
+					activateAll((e.stateMask & SWT.CONTROL) == 0, (e.stateMask & SWT.SHIFT) != 0);
 				}
 			}
 		});
@@ -922,7 +922,7 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 		adder.add(invisibleRoot);
 	}
 
-	public void activateAll(boolean newActivationStatus) {
+	public void activateAll(boolean newActivationStatus, boolean onlyVisible) {
 		class ActivationSetter {
 			boolean newActivationStatus;
 			public ActivationSetter(boolean newActivationStatus) {
@@ -940,7 +940,15 @@ public class EmbSysRegView extends ViewPart implements IGDBInterfaceSuspendListe
 			}
 		}
 		final ActivationSetter as = new ActivationSetter(newActivationStatus);
-		as.set(invisibleRoot);
+		if (onlyVisible) {
+			for (final Object o : viewer.getExpandedElements())
+			{
+				if (o instanceof TreeElement)
+					as.set((TreeElement) o);
+			}
+		}
+		else
+			as.set(invisibleRoot);
 		viewer.refresh();
 	}
 	/**
