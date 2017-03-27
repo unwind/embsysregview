@@ -1,6 +1,6 @@
 org.eclipse.cdt.embsysregview
-
 =============================
+
 This is a personal work clone of the great EmbSysRegView project.
 The official page of the project is at [SourceForge](http://embsysregview.sourceforge.net/).
 
